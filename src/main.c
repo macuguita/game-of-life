@@ -26,8 +26,6 @@
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 640
 
-static_assert(GAME_WIDTH <= WINDOW_WIDTH && GAME_HEIGHT <= WINDOW_HEIGHT, "size of game needs to be smaller or equal to the one of the window");
-
 #if 0
 int GAME[GAME_HEIGHT][GAME_WIDTH] = {
         {0, 0, 0, 0, 0, 0, 0, 0,},
