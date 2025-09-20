@@ -7,6 +7,7 @@ MACOS_FRAMEWORKS="-framework CoreVideo -framework IOKit -framework Cocoa -framew
 rm -rf build
 mkdir -p build
 
+# Compile program
 cc $CFLAGS -o build/$PROGRAM_NAME src/main.c \
   ./thirdparty/macos-raylib/lib/libraylib.a \
   -I./thirdparty/macos-raylib/include -L./thirdparty/macos-raylib/lib \
@@ -17,7 +18,21 @@ mkdir -p $APP_BUNDLE/Contents/MacOS
 mkdir -p $APP_BUNDLE/Contents/Resources
 
 cp build/$PROGRAM_NAME $APP_BUNDLE/Contents/MacOS/
-cp resources/icon.ico $APP_BUNDLE/Contents/Resources/
+
+# Generate .icns from 1024x1024 PNG
+ICONSET=build/icon.iconset
+rm -rf $ICONSET
+mkdir -p $ICONSET
+
+for size in 16 32 128 256 512; do
+    sips -z $size $size resources/icon.png --out $ICONSET/icon_${size}x${size}.png
+    sips -z $((size*2)) $((size*2)) resources/icon.png --out $ICONSET/icon_${size}x${size}@2x.png
+done
+
+# Convert iconset to .icns
+iconutil -c icns $ICONSET
+mv build/icon.icns $APP_BUNDLE/Contents/Resources/icon.icns
+rm -rf $ICONSET
 
 # Info.plist
 cat > "$APP_BUNDLE/Contents/Info.plist" << EOF
@@ -25,10 +40,11 @@ cat > "$APP_BUNDLE/Contents/Info.plist" << EOF
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <key>CFBundleExecutable</key>
-  <string>$PROGRAM_NAME</string>
-  <key>CFBundleIconFile</key>
-  <string>icon.ico</string>
+    <key>CFBundleExecutable</key>
+    <string>$PROGRAM_NAME</string>
+
+    <key>CFBundleIconFile</key>
+    <string>icon.icns</string>
 </dict>
 </plist>
 EOF
