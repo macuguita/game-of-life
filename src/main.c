@@ -111,8 +111,6 @@ int main(void) {
                     WHITE
                     );
             } EndShaderMode();
-
-            DrawFPS(0, 0);
         } EndDrawing();
         // print_game();
         if (!paused)
