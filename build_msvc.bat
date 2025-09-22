@@ -20,13 +20,20 @@ REM Clean and create build directory
 if exist build rmdir /s /q build
 mkdir build
 
-REM Compile and link main.c directly
+REM Compile resources (icon)
+rc /fo build\%PROGRAM_NAME%.res %PROGRAM_NAME%.rc
+if errorlevel 1 (
+    exit /b 1
+)
+
+REM Compile and link main.c directly with resources
 cl src\main.c %CFLAGS% %INCLUDES% /link %ARCH% /OUT:build\%PROGRAM_NAME%.exe ^
     .\thirdparty\msvc-raylib\lib\raylib.lib ^
+    build\%PROGRAM_NAME%.res ^
     /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup ^
     windowsapp.lib opengl32.lib kernel32.lib user32.lib shell32.lib gdi32.lib winmm.lib msvcrt.lib
 if errorlevel 1 (
     exit /b 1
 )
-del main.obj
 
+del main.obj

@@ -112,7 +112,7 @@ int main(void) {
                     );
             } EndShaderMode();
         } EndDrawing();
-        // print_game();
+        //print_game();
         if (!paused)
             iterate_game();
     }
@@ -172,7 +172,6 @@ void iterate_game() {
             GAME[y][x] = new_game[y][x];
         }
     }
-
 }
 
 void print_game() {
